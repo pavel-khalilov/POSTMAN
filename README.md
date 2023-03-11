@@ -1,2 +1,2 @@
 # POSTMAN
-Here are in branches the tasks with collections for Postman
+Here are the tasks with collections for Postman in branches
