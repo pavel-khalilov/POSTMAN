@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "EP_1",
+			"name": "EP_1 /get_method",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -39,7 +39,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_2",
+			"name": "EP_2 /user_info_3",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -81,7 +81,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_3",
+			"name": "EP_3 /object_info_1",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -117,7 +117,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_4",
+			"name": "EP_4 /object_info_2",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -153,7 +153,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_5",
+			"name": "EP_5 /object_info_3",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -189,7 +189,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_6",
+			"name": "EP_6 /object_info_4",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -225,7 +225,7 @@
 			"response": []
 		},
 		{
-			"name": "EP_7",
+			"name": "EP_7 /user_info_2",
 			"request": {
 				"method": "POST",
 				"header": [],
