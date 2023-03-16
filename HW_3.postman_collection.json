@@ -1,0 +1,63 @@
+{
+	"info": {
+		"_postman_id": "c0551b01-b502-427d-a052-4a62a93ec6eb",
+		"name": "VADIM GROUP_33 HW_3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13601290"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// \r",
+							"var response_jsonData = pm.response.json();\r",
+							"pm.environment.set(\"token\", response_jsonData.token);\r",
+							"console.log('token:', response_jsonData.token)\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "tatarin555",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "230585",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
