@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "c0551b01-b502-427d-a052-4a62a93ec6eb",
+		"name": "VADIM GROUP_33 HW_3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13601290"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Token из response сохраняем в окружении\r",
+							"var response_jsonData = pm.response.json();\r",
+							"pm.environment.set(\"token\", response_jsonData.token);\r",
+							"console.log('token:', response_jsonData.token)\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "230585",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "tatarin555",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1) Статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// 2) Проверка структуры json в ответе. Сначала создается json-схема корректного\\необходимого response, а далее она проверяется библиотекой встроенного валидатора. В {} скобках описывают объект, в [] массив. У каждого параметра может быть type(тип), properties(свойство\\параметр), additionalProperties(параметр который говорит, о том, что доп.параметров кроме описанных в текущей схеме не должно быть в response), required(массив содержащий параметры которые обязательны в response). Все эти свойства распространяются только на один уровень, для каждого уровня необходимо описывать свои свойства. Для описания свойств массива можно использовать minItems(мин. кол-во элементов в массиве), maxItems(макс. кол-во элементов в массиве), items(типы содержащихся данных описываются в виде массива \"type\":[\"string\",\"number\"]). Json-схему можно нахерачить самому, а можно сгенерировать на сайте https://jsonschema.net/ и вставить её в тест.\r",
+							"const json_schema_of_response = {\r",
+							"    'type' : 'object',\r",
+							"    'properties':{\r",
+							"        'person':{\r",
+							"            'type':'object',\r",
+							"            'properties':{\r",
+							"                'u_age':{'type':'integer'},\r",
+							"                'u_name':{\r",
+							"                    'type':'array',\r",
+							"                    \"minItems\": 1,\r",
+							"                    \"maxItems\": 3,\r",
+							"                    \"items\": {\r",
+							"                        \"type\":[\"integer\",\"string\"]\r",
+							"                    }                   \r",
+							"                },\r",
+							"                'u_salary_1_5_year':{'type':'number'}\r",
+							"            },\r",
+							"            'additionalProperties': false,\r",
+							"            \"required\":[\"u_age\",\"u_name\",\"u_salary_1_5_year\"]\r",
+							"        },\r",
+							"        'qa_salary_after_12_months':{'type':'number'},\r",
+							"        'qa_salary_after_6_months':{'type':\"integer\"},\r",
+							"        \"start_qa_salary\":{\"type\":\"integer\"}\r",
+							"    },\r",
+							"    \"additionalProperties\": false,\r",
+							"    \"required\":[\"person\",\"qa_salary_after_12_months\",\"qa_salary_after_6_months\",\"start_qa_salary\"]\r",
+							"};\r",
+							"pm.test('Проверка корректности json схемы в ответе', () => {pm.response.to.have.jsonSchema(json_schema_of_response);\r",
+							"});\r",
+							"\r",
+							"// 3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент\r",
+							"// создаем переменные\r",
+							"var response_jsonData = pm.response.json();\r",
+							"var response_start_salary = response_jsonData.start_qa_salary;\r",
+							"var response_salary_6_months = response_jsonData.qa_salary_after_6_months;\r",
+							"var response_salary_12_months = response_jsonData.qa_salary_after_12_months;\r",
+							"var response_salary_1_5_year = response_jsonData.person.u_salary_1_5_year;\r",
+							"var request_rawData = JSON.parse(pm.request.body.raw);\r",
+							"var request_salary = request_rawData.salary;\r",
+							"// проверяем корректность перемножения с учетом коэффициентов\r",
+							"pm.test(\"3.1 Verifying start qa salary equal to 1 x request salary\", function () {\r",
+							"    pm.expect(response_start_salary).to.eql(1*request_salary);\r",
+							"});\r",
+							"console.log(\"#3.1\",\"Response start salary : \" + \"$\" + response_start_salary + \" = \" + \"$\" + request_salary + \" : 1 x Request salary\");\r",
+							"\r",
+							"pm.test(\"3.2 Verifying response salary 6 months equal to 2 x request salary\", function () {\r",
+							"    pm.expect(response_salary_6_months).to.eql(2*request_salary);\r",
+							"});\r",
+							"console.log(\"#3.2\",\"Response salary 6 months : \" + \"$\" + response_salary_6_months + \" = \" + \"$\" + 2*request_salary + \" : 2 x Request salary\");\r",
+							"\r",
+							"pm.test(\"3.3 Verifying response salary 12 months equal to 2.9 x request salary\", function () {\r",
+							"    pm.expect(response_salary_12_months).to.eql(2.9*request_salary);\r",
+							"});\r",
+							"console.log(\"#3.3\",\"Response salary 12 months : \" + \"$\" + response_salary_12_months + \" = \" + \"$\" + 2.9*request_salary + \" : 2.9 x Request salary\");\r",
+							"\r",
+							"pm.test(\"3.4 Verifying response salary 1.5 year equal to 4 x request salary\", function () {\r",
+							"    pm.expect(response_salary_1_5_year).to.eql(4*request_salary);\r",
+							"});\r",
+							"console.log(\"#3.4\",\"Response salary 1.5 year : \" + \"$\" + response_salary_1_5_year + \" = \" + \"$\" + 4*request_salary + \" : 4 x Request salary\");\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"age\" : 38,\r\n    \"salary\" : 5000,\r\n    \"name\" : \"Pavel\",\r\n    \"auth_token\" : \"{{token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user_info",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user_info"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "User_info example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": 38,\r\n    \"salary\": 5000,\r\n    \"name\": \"Pavel\",\r\n    \"auth_token\": \"{{token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mock_server}}/user_info",
+							"host": [
+								"{{mock_server}}"
+							],
+							"path": [
+								"user_info"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "240"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 17 Mar 2023 15:09:52 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"person\": {\n        \"u_age\": 38,\n        \"u_name\": [\n            \"Pavel\",\n            5000,\n            38\n        ],\n        \"u_salary_1_5_year\": 20000\n    },\n    \"qa_salary_after_12_months\": 14500.0,\n    \"qa_salary_after_6_months\": 10000,\n    \"start_qa_salary\": 5000\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
